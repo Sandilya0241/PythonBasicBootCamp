@@ -1,6 +1,0 @@
-Hello, how are you?
-I'm good. Thank you.
-My name is Sandilya.
-Welcome to Robo world!!!This is the first line
-This is the second line
-This is the third line

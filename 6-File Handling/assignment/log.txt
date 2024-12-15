@@ -1,0 +1,9 @@
+2024-12-14T14:22:45:INFO:Open database connection...
+2024-12-14T14:22:45:DEBUG:Insert record into DB
+2024-12-14T14:22:45:INFO:Closing connections
+2024-12-14T15:57:21:INFO:Open database connection...
+2024-12-14T15:57:21:DEBUG:Insert record into DB
+2024-12-14T15:57:21:INFO:Closing connections
+2024-12-14T15:57:24:INFO:Open database connection...
+2024-12-14T15:57:24:DEBUG:Insert record into DB
+2024-12-14T15:57:24:INFO:Closing connections
