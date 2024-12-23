@@ -1,2 +1,3 @@
 ipykernel
-requests
+numpy
+pandas
