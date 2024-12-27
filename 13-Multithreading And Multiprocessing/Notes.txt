@@ -1,0 +1,42 @@
+Multithreading And Multiprocessing
+========================================================================
+
+1.) Program.
+2.) Process.
+3.) Threads.
+4.) Examples of process and thread.
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Basic definition of Program:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A program is a sequence of instructions written in programming language. [Ex: Python, C++]. 
+
+Ex: Google Chrome is an .exe file. This is a sequence of instructions -> Browser should work.
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Basic definition of Process:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A Process is simply an instance of a Program that is being executed. 
+
+Ex: Each and every chrome window is a process of Chrome Program.
+
+
+Resources shared with in the process are:
+===========================================
+
+Code Segment - This code that is required to run this particular process.
+Data Segment - This is having list of all global and static variables.
+Heap Memory - This is for dynamic memory allocation.
+Stack - It is going to make sure that it has access to all the local variables, function calls.
+Register - These are small memories to keep/ to store some of the variables or some logic for a smaller period of time.   
+
+
+This will have separate memory space. So, one process cannot corrupt another process.
++-----------+----------+----------+
+| code      |Data      |Heap      |
+|segment    |Segment   |Memory    |
++-----------+-----+----+----------+
+|Stack            |Registers      |
++-----------------+---------------+
