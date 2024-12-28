@@ -15,13 +15,12 @@ import threading
 import requests
 from bs4 import BeautifulSoup
 
-urls = ['https://www.geeksforgeeks.org/python-web-scraping-tutorial/','https://www.geeksforgeeks.org/array-data-structure-guide/?ref=outind']
+urls = ["https://python.langchain.com/docs/introduction/","https://python.langchain.com/docs/tutorials/","https://python.langchain.com/docs/concepts/"]
 
 def fetch_contents(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
     print(f'Fetched {len(soup.text)} characters from {url}')
-
 
 threads = []
 
@@ -35,3 +34,4 @@ for thread in threads:
 
 
 print('All pages content fetched!!')
+
