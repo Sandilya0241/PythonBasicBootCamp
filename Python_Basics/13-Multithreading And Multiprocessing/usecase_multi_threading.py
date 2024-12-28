@@ -20,12 +20,12 @@ urls = ["https://python.langchain.com/docs/introduction/","https://python.langch
 def fetch_contents(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
-    print(f'Fetched {len(soup.text)} characters from {url}')
+    print(f'Fetched {len(soup.text)} characters from {url}\n')
 
 threads = []
 
 for url in urls:
-    thread=threading.Thread(target=fetch_contents,args=(urls,))
+    thread=threading.Thread(target=fetch_contents,args=(url,))
     threads.append(thread)
     thread.start()
 
