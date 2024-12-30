@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Results</title>
+    </head>
+    <body>
+        <table border="2">
+            <tr>
+                {% for k in results.keys() %}
+                    <th>{{k.upper()}}</th>
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for v in results.values() %}
+                    <td>{{v}}</td>
+                {% endfor %}
+            </tr>
+        </table>
+    </body>
+</html>

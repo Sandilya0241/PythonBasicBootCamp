@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Results</title>
+    </head>
+    <body>
+        <table border="2">
+            <tr>
+                <th>SCORE</th>
+                <th>RESULT</th>
+            </tr>
+            <tr>
+                <td>{{avgscore}}</td>
+                {% if avgscore >= 50 %}
+                    <td>PASS</td>
+                {% else %}
+                    <td>FAIL</td>
+                {% endif %}
+            </tr>
+        </table>
+    </body>
+</html>
