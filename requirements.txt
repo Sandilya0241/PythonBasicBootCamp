@@ -4,3 +4,6 @@ pandas
 matplotlib
 seaborn
 bs4
+flask
+memory_profiler
+streamlit
