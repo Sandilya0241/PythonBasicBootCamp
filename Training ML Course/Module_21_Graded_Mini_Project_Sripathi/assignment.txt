@@ -1,0 +1,139 @@
+import pandas as pd
+import numpy as np
+import seaborn as sb
+from matplotlib import pyplot as plt
+import warnings
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+warnings.filterwarnings('ignore')
+
+    
+
+if __name__ == "__main__":
+    
+    # Load csv file
+    df = pd.read_csv('Customer_Satisfaction.csv')
+    
+    df.drop_duplicates(inplace=True)
+    for col in df.columns:
+        if df[col].dtype in [np.float64, np.int64]:
+            df[col].fillna(df[col].median(), inplace=True)
+        else:
+            df[col].fillna(df[col].mode()[0], inplace=True)
+    
+    # Convert categorical columns to category dtype
+    for col in df.select_dtypes(include='object').columns:
+        df[col] = df[col].astype('category')
+    for col in df.select_dtypes(include=np.number).columns:
+        Q1 = df[col].quantile(0.25)
+        Q3 = df[col].quantile(0.75)
+        IQR = Q3 - Q1
+        lower = Q1 - 1.5 * IQR
+        upper = Q3 + 1.5 * IQR
+        outliers = (df[col] < lower) | (df[col] > upper)
+        outlier_count = outliers.sum()
+        outlier_pct = outlier_count / len(df) * 100
+        if outlier_pct < 5:
+            df = df[~outliers]
+    X = df.drop(columns=['Satisfaction'],axis=1)
+    y = df['Satisfaction']
+    
+    from sklearn.preprocessing import OneHotEncoder, StandardScaler
+    from sklearn.compose import ColumnTransformer
+    num_features = X.select_dtypes(exclude="category").columns
+    cat_features = X.select_dtypes(include="category").columns
+    numeric_transformer = StandardScaler()
+    oh_transformer = OneHotEncoder()
+
+    preprocessor = ColumnTransformer(
+        [
+            ("OneHotEncoder", oh_transformer, cat_features),
+            ("StandardScaler", numeric_transformer, num_features),        
+        ]
+    )
+    X = preprocessor.fit_transform(X)
+    
+    # separate dataset into train and test
+    from sklearn.model_selection import train_test_split
+    X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2,random_state=42)
+    
+    model = RandomForestClassifier(n_estimators=100, random_state=42)
+    # Feature Engineering: Create total_delay
+    # If columns exist, create new feature
+    if 'Departure Delay' in df.columns and 'Arrival Delay' in df.columns:
+        df['total_delay'] = df['Departure Delay'] + df['Arrival Delay']
+
+    
+    print("\nCorrelation matrix (numeric features):")
+    print(df.corr(numeric_only=True))
+
+    # EDA: Boxplot for total_delay vs Satisfaction (if available)
+    if 'total_delay' in df.columns:
+        plt.figure(figsize=(6,4))
+        sb.boxplot(x='Satisfaction', y='total_delay', data=df)
+        plt.title('Total Delay by Satisfaction')
+        plt.tight_layout()
+        plt.show()
+
+    # Prepare data for modeling
+    models =  {
+        "Random Forest":RandomForestClassifier(),
+        "K-Neighbour Classifier":KNeighborsClassifier(),
+        "Decision Tree":DecisionTreeClassifier(),
+    }
+    
+
+    # Split dataset
+    from sklearn.model_selection import train_test_split
+    X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2,random_state=42)
+
+    # Train and evaluate models
+    for name, model in models.items():
+        print(f"\nTraining {name}...")
+        model.fit(X_train, y_train)
+        y_pred_test = model.predict(X_test)
+        y_pred_train = model.predict(X_train)
+        print(f"Test Accuracy: {accuracy_score(y_test, y_pred_test):.4f}")
+        print(f"Train Accuracy: {accuracy_score(y_train, y_pred_train):.4f}")
+        print(f"Test Precision: {precision_score(y_test, y_pred_test, average='weighted'):.4f}")
+        print(f"Test Recall: {recall_score(y_test, y_pred_test, average='weighted'):.4f}")
+        print(f"Test F1 Score: {f1_score(y_test, y_pred_test, average='weighted'):.4f}")
+        # Confusion matrix
+        from sklearn.metrics import confusion_matrix
+        cm = confusion_matrix(y_test, y_pred_test)
+        print(f"Confusion Matrix (Test):\n{cm}")
+        # Feature importances (if available)
+        if hasattr(model, 'feature_importances_'):
+            try:
+                importances = model.feature_importances_
+                # Recreate preprocessor to get feature names
+                from sklearn.preprocessing import OneHotEncoder, StandardScaler
+                from sklearn.compose import ColumnTransformer
+                num_features = df.drop(columns=['Satisfaction']).select_dtypes(exclude="category").columns
+                cat_features = df.drop(columns=['Satisfaction']).select_dtypes(include="category").columns
+                oh_transformer = OneHotEncoder()
+                numeric_transformer = StandardScaler()
+                preprocessor = ColumnTransformer([
+                    ("OneHotEncoder", oh_transformer, cat_features),
+                    ("StandardScaler", numeric_transformer, num_features),
+                ])
+                preprocessor.fit(df.drop(columns=['Satisfaction']))
+                # Get feature names
+                feature_names = []
+                if hasattr(preprocessor, 'get_feature_names_out'):
+                    feature_names = preprocessor.get_feature_names_out()
+                else:
+                    for name, trans, cols in preprocessor.transformers_:
+                        if hasattr(trans, 'get_feature_names_out'):
+                            feature_names.extend(trans.get_feature_names_out(cols))
+                        else:
+                            feature_names.extend(cols)
+                print("Feature Importances:")
+                for fname, imp in zip(feature_names, importances):
+                    print(f"{fname}: {imp:.4f}")
+            except Exception as e:
+                print("Could not map feature importances to names:", e)
+
+
