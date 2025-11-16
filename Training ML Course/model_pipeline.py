@@ -11,6 +11,7 @@ def evaluate_model(train_data, test_data, trained_model,roc_analysis=True):
     X_train, y_train = train_data
     X_test, y_test = test_data
 
+
     # Get Predictions
     y_train_pred = trained_model.predict(X_train)
     y_test_pred = trained_model.predict(X_test)
